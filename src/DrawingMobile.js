@@ -122,7 +122,7 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
   return (
     <>
     <input type="file" accept="image/*" onChange={handleImageUpload} />
-    {/* <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto', backgroundImage: `url(${initImage})`, backgroundSize: 'cover' }}>
+    <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto', backgroundImage: `url(${initImage})`, backgroundSize: 'cover' }}>
       <canvas ref={canvasRef} id="canvas" width="512" height="512"></canvas>
       Line width :
       <select id="selWidth">
@@ -139,8 +139,8 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
         <option value="yellow">yellow</option>
         <option value="gray">gray</option>
       </select>
-    </div> */}
-    {initImage && (
+    </div>
+    {/* {initImage && (
         <div
           style={{
             width: '512px',
@@ -158,7 +158,7 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
             style={{ position: 'absolute', top: 0, left: 0 }}
           ></canvas>
         </div>
-      )}
+      )} */}
     </>
   );
 };
