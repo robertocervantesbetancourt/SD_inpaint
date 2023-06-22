@@ -45,6 +45,7 @@ const App = () => {
   return (
     <div>
       <h1>Stability App</h1>
+      <p>Your device is {device}</p>
 
       <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/>
       {maskImage &&
