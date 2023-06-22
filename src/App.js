@@ -10,10 +10,11 @@ const App = () => {
   const [generatedImage, setGeneratedImage] = useState(null);
   const [deviceType, setDeviceType] = useState("Desktop");
 
-
+useEffect(() => {
   if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)){
     setDeviceType("mobile")
   }
+}, []);
   
 
 
