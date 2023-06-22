@@ -8,20 +8,12 @@ const App = () => {
   const [maskImage, setMaskImage] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
-  const [device, setDevice] = useState(null);
   const [deviceType, setDeviceType] = useState("Desktop");
 
-//function that detects if the user is on a mobile device and changes the state of deviceType
-  const detectDevice = () => {
-    if (window.innerWidth < 600) {
-      setDeviceType("Mobile");
-    }
+
+  if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)){
+    setDeviceType("mobile")
   }
-
-  useEffect(() => {
-    detectDevice();
-  },[])
-
   
 
 
