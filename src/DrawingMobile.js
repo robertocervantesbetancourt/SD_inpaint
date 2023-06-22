@@ -56,7 +56,7 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
           context.moveTo(ongoingTouchesRef.current[idx].clientX - offsetXRef.current, ongoingTouchesRef.current[idx].clientY - offsetYRef.current);
           context.lineTo(touches[i].clientX - offsetXRef.current, touches[i].clientY - offsetYRef.current);
           context.lineWidth = 40;
-          context.strokeStyle = '#FFFFFF';
+          context.strokeStyle = '#000000';
           context.lineJoin = "round";
           context.lineCap = 'round';
           context.closePath();
