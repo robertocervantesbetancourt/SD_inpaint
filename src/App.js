@@ -9,10 +9,20 @@ const App = () => {
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
   const [device, setDevice] = useState(null);
+  const [deviceType, setDeviceType] = useState("Desktop");
+
+//function that detects if the user is on a mobile device and changes the state of deviceType
+  const detectDevice = () => {
+    if (window.innerWidth < 600) {
+      setDeviceType("Mobile");
+    }
+  }
 
   useEffect(() => {
-    setDevice(window.navigator.userAgent)
+    detectDevice();
   },[])
+
+  
 
 
   const handleClick = async () => {
@@ -45,7 +55,7 @@ const App = () => {
   return (
     <div>
       <h1>Stability App</h1>
-      <p>Your device is {device}</p>
+      <p>Your device is {deviceType}</p>
 
       <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/>
       {maskImage &&
