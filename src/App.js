@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import StabilityAPI from './StabilityAPI';
 import DrawingOnImage from './Drawing';
+import DrawingMobile from './DrawingMobile';
 
 
 const App = () => {
@@ -15,6 +16,8 @@ useEffect(() => {
     setDeviceType("mobile")
   }
 }, []);
+
+console.log(window.visualViewport)
   
 
 
@@ -50,7 +53,9 @@ useEffect(() => {
       <h1>Stability App</h1>
       <p>Your device is {deviceType}</p>
 
-      <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/>
+      {deviceType === "mobile" ? <DrawingMobile/> : <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/>}
+
+      {/* <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/> */}
       {maskImage &&
       <>
       <textarea
