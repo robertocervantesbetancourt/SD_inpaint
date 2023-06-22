@@ -26,18 +26,20 @@ const StabilityAPI = async (initImage, maskImage, prompt) => {
       responseType: 'blob',
     });
 
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'v1_img2img_masking.png');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    return new Blob([response.data], { type: 'image/png' });
 
-    return true;
+    // const url = window.URL.createObjectURL(new Blob([response.data]));
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.setAttribute('download', 'v1_img2img_masking.png');
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+
+    // return true;
   } catch (error) {
     console.error('Error:', error);
-    return false;
+    return null;
   }
 };
 
