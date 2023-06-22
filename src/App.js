@@ -7,6 +7,7 @@ const App = () => {
   const [initImage, setInitImage] = useState(null);
   const [maskImage, setMaskImage] = useState(null);
   const [prompt, setPrompt] = useState("");
+  const [generatedImage, setGeneratedImage] = useState(null);
 
 
   const handleClick = async () => {
@@ -15,13 +16,21 @@ const App = () => {
       return;
     }
 
-    const success = await StabilityAPI(initImage, maskImage, prompt);
-    if (success) {
-      console.log('Image download successful!');
-    } else {
-      console.log('Image download failed!');
-    }
-  };
+  //   const success = await StabilityAPI(initImage, maskImage, prompt);
+  //   if (success) {
+  //     console.log('Image download successful!');
+  //   } else {
+  //     console.log('Image download failed!');
+  //   }
+  // };
+
+  const generatedImageData = await StabilityAPI(initImage, maskImage, prompt);
+  if (generatedImageData) {
+    setGeneratedImage(generatedImageData);
+  } else {
+    console.log('Image generation failed!');
+  }
+};
 
 
   const handleChange = (event) => {
@@ -46,6 +55,12 @@ const App = () => {
       {prompt.length > 0 &&
       <button onClick={handleClick}>Generate AI Image</button>
       }
+      {generatedImage && (
+        <div>
+          <h2>Generated Image</h2>
+          <img src={URL.createObjectURL(generatedImage)} alt="Generated" />
+        </div>
+      )}
     </div>
   );
 };
