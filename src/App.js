@@ -8,6 +8,11 @@ const App = () => {
   const [maskImage, setMaskImage] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
+  const [device, setDevice] = useState(null);
+
+  useEffect(() => {
+    setDevice(window.navigator.userAgent)
+  },[])
 
 
   const handleClick = async () => {
