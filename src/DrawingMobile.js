@@ -1,10 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-const DrawingMobile = () => {
+const DrawingMobile = ({ InitialImage, TheMask }) => {
   const canvasRef = useRef(null);
   const offsetXRef = useRef(0);
   const offsetYRef = useRef(0);
   const ongoingTouchesRef = useRef([]);
+  const [initImage, setInitImage] = useState(null);
+
+  const handleImageUpload = (event) => {
+    InitialImage(event.target.files[0]);
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setInitImage(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -101,9 +116,10 @@ const DrawingMobile = () => {
   }, []);
 
   return (
-    <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
+    <>
+    <input type="file" accept="image/*" onChange={handleImageUpload} />
+    {/* <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
       <canvas ref={canvasRef} id="canvas" width="900" height="360"></canvas>
-      {/* <button onClick={clearArea}>Clear Area</button> */}
       Line width :
       <select id="selWidth">
         <option value="11">11</option>
@@ -119,7 +135,27 @@ const DrawingMobile = () => {
         <option value="yellow">yellow</option>
         <option value="gray">gray</option>
       </select>
-    </div>
+    </div> */}
+    {initImage && (
+        <div
+          style={{
+            width: '512px',
+            height: '512px',
+            backgroundImage: `url(${initImage})`,
+            backgroundSize: 'cover',
+            position: 'relative',
+          }}
+        >
+          <canvas
+            ref={canvasRef}
+            id="canvas"
+            width="512"
+            height="512"
+            style={{ position: 'absolute', top: 0, left: 0 }}
+          ></canvas>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import StabilityAPI from './StabilityAPI';
-import DrawingOnImage from './Drawing';
-import DrawingMobile from './DrawingMobile';
-
+import React, { useState, useEffect } from "react";
+import StabilityAPI from "./StabilityAPI";
+import DrawingOnImage from "./Drawing";
+import DrawingMobile from "./DrawingMobile";
 
 const App = () => {
   const [initImage, setInitImage] = useState(null);
@@ -11,38 +10,40 @@ const App = () => {
   const [generatedImage, setGeneratedImage] = useState(null);
   const [deviceType, setDeviceType] = useState("Desktop");
 
-useEffect(() => {
-  if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)){
-    setDeviceType("mobile")
-  }
-}, []);
 
-console.log(window.visualViewport)
-  
+  useEffect(() => {
+    if (
+      navigator.userAgent.match(/Android/i) ||
+      navigator.userAgent.match(/iPhone/i) ||
+      navigator.userAgent.match(/iPad/i)
+    ) {
+      setDeviceType("mobile");
+    }
+  }, []);
 
+  console.log(window.visualViewport);
 
   const handleClick = async () => {
     if (!initImage || !maskImage) {
-      console.error('Please upload both images');
+      console.error("Please upload both images");
       return;
     }
 
-  //   const success = await StabilityAPI(initImage, maskImage, prompt);
-  //   if (success) {
-  //     console.log('Image download successful!');
-  //   } else {
-  //     console.log('Image download failed!');
-  //   }
-  // };
+    //   const success = await StabilityAPI(initImage, maskImage, prompt);
+    //   if (success) {
+    //     console.log('Image download successful!');
+    //   } else {
+    //     console.log('Image download failed!');
+    //   }
+    // };
 
-  const generatedImageData = await StabilityAPI(initImage, maskImage, prompt);
-  if (generatedImageData) {
-    setGeneratedImage(generatedImageData);
-  } else {
-    console.log('Image generation failed!');
-  }
-};
-
+    const generatedImageData = await StabilityAPI(initImage, maskImage, prompt);
+    if (generatedImageData) {
+      setGeneratedImage(generatedImageData);
+    } else {
+      console.log("Image generation failed!");
+    }
+  };
 
   const handleChange = (event) => {
     setPrompt(event.target.value);
@@ -51,24 +52,29 @@ console.log(window.visualViewport)
   return (
     <div>
       <h1>Stability App</h1>
+
       <p>Your device is {deviceType}</p>
 
-      {deviceType === "mobile" ? <DrawingMobile/> : <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/>}
+      {deviceType === "mobile" ? (
+        <DrawingMobile />
+      ) : (
+        <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage} />
+      )}
 
       {/* <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/> */}
-      {maskImage &&
-      <>
-      <textarea
-        value={prompt}
-        onChange={handleChange}
-        placeholder="Write a short text blurb..."
-      />
-      <p>Character count: {prompt.length}</p>
-      </>
-      }
-      {prompt.length > 0 &&
-      <button onClick={handleClick}>Generate AI Image</button>
-      }
+      {maskImage && (
+        <>
+          <textarea
+            value={prompt}
+            onChange={handleChange}
+            placeholder="Write a short text blurb..."
+          />
+          <p>Character count: {prompt.length}</p>
+        </>
+      )}
+      {prompt.length > 0 && (
+        <button onClick={handleClick}>Generate AI Image</button>
+      )}
       {generatedImage && (
         <div>
           <h2>Generated Image</h2>
