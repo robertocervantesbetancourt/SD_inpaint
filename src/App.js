@@ -9,6 +9,12 @@ const App = () => {
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
   const [deviceType, setDeviceType] = useState("Desktop");
+  const [selectedOption, setSelectedOption] = useState('mobile');
+
+  const handleToggle = () => {
+    const newOption = selectedOption === 'mobile' ? 'desktop' : 'mobile';
+    setSelectedOption(newOption);
+  };
 
 
   useEffect(() => {
@@ -21,7 +27,6 @@ const App = () => {
     }
   }, []);
 
-  console.log(window.visualViewport);
 
   const handleClick = async () => {
     if (!initImage || !maskImage) {
@@ -52,11 +57,21 @@ const App = () => {
   return (
     <div>
       <h1>Stability App</h1>
+      <label className="toggle-switch">
+      <input
+        type="checkbox"
+        checked={selectedOption === 'desktop'}
+        onChange={handleToggle}
+      />
+      <span className="slider"></span>
+      <span className="option-label">
+        {selectedOption === 'desktop' ? 'Desktop' : 'Mobile'}
+      </span>
+    </label>
+      {/* <p>Your device is {deviceType}</p> */}
 
-      <p>Your device is {deviceType}</p>
-
-      {deviceType === "mobile" ? (
-        <DrawingMobile />
+      {selectedOption === "mobile" ? (
+        <DrawingMobile InitialImage={setInitImage}/>
       ) : (
         <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage} />
       )}

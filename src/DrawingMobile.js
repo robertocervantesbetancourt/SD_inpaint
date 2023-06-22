@@ -23,6 +23,8 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+
+    if (canvas) {
     const context = canvas.getContext('2d');
     const viewport = window.visualViewport;
 
@@ -53,9 +55,10 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
           context.beginPath();
           context.moveTo(ongoingTouchesRef.current[idx].clientX - offsetXRef.current, ongoingTouchesRef.current[idx].clientY - offsetYRef.current);
           context.lineTo(touches[i].clientX - offsetXRef.current, touches[i].clientY - offsetYRef.current);
-          context.lineWidth = document.getElementById('selWidth').value;
-          context.strokeStyle = color;
+          context.lineWidth = 40;
+          context.strokeStyle = '#FFFFFF';
           context.lineJoin = "round";
+          context.lineCap = 'round';
           context.closePath();
           context.stroke();
           ongoingTouchesRef.current.splice(idx, 1, copyTouch(touches[i]));
@@ -113,13 +116,14 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
       canvas.removeEventListener('touchcancel', handleCancel);
       canvas.removeEventListener('touchmove', handleMove);
     };
+    }
   }, []);
 
   return (
     <>
     <input type="file" accept="image/*" onChange={handleImageUpload} />
-    {/* <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
-      <canvas ref={canvasRef} id="canvas" width="900" height="360"></canvas>
+    {/* <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto', backgroundImage: `url(${initImage})`, backgroundSize: 'cover' }}>
+      <canvas ref={canvasRef} id="canvas" width="512" height="512"></canvas>
       Line width :
       <select id="selWidth">
         <option value="11">11</option>
