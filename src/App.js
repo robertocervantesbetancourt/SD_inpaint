@@ -2,45 +2,25 @@ import React, { useState, useEffect } from "react";
 import StabilityAPI from "./StabilityAPI";
 import DrawingOnImage from "./Drawing";
 import DrawingMobile from "./DrawingMobile";
+import { MdTouchApp, MdMouse } from "react-icons/md";
 
 const App = () => {
   const [initImage, setInitImage] = useState(null);
   const [maskImage, setMaskImage] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
-  const [deviceType, setDeviceType] = useState("Desktop");
-  const [selectedOption, setSelectedOption] = useState('mobile');
+  const [selectedOption, setSelectedOption] = useState("mobile");
 
   const handleToggle = () => {
-    const newOption = selectedOption === 'mobile' ? 'desktop' : 'mobile';
+    const newOption = selectedOption === "mobile" ? "desktop" : "mobile";
     setSelectedOption(newOption);
   };
 
-
-  useEffect(() => {
-    if (
-      navigator.userAgent.match(/Android/i) ||
-      navigator.userAgent.match(/iPhone/i) ||
-      navigator.userAgent.match(/iPad/i)
-    ) {
-      setDeviceType("mobile");
-    }
-  }, []);
-
-
-  const handleClick = async () => {
+  const handleGenerateAI = async () => {
     if (!initImage || !maskImage) {
       console.error("Please upload both images");
       return;
     }
-
-    //   const success = await StabilityAPI(initImage, maskImage, prompt);
-    //   if (success) {
-    //     console.log('Image download successful!');
-    //   } else {
-    //     console.log('Image download failed!');
-    //   }
-    // };
 
     const generatedImageData = await StabilityAPI(initImage, maskImage, prompt);
     if (generatedImageData) {
@@ -55,28 +35,39 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Stability App</h1>
-      <label className="toggle-switch">
-      <input
-        type="checkbox"
-        checked={selectedOption === 'desktop'}
-        onChange={handleToggle}
-      />
-      <span className="slider"></span>
-      <span className="option-label">
-        {selectedOption === 'desktop' ? 'Desktop' : 'Mobile'}
-      </span>
-    </label>
-      {/* <p>Your device is {deviceType}</p> */}
+    <div className="mx-10 my-4">
+      <h1 className="text-3xl font-sans">Transform Your Images</h1>
+      <div className="flex flex-row mt-4">
+        <button onClick={handleToggle}>
+          <MdTouchApp
+            className={`text-2xl ${
+              selectedOption === "mobile" ? "text-gray-950" : "text-gray-400"
+            }`}
+          />
+        </button>
+        <button
+          className={`border-2 w-12 h-6  rounded-xl p-1 flex content-center items-center justify-start ${
+            selectedOption === "mobile" ? "justify-start" : "justify-end"
+          }`}
+          onClick={handleToggle}
+        >
+          <div className="w-4 h-4 bg-white rounded-full bg-gray-800"></div>
+        </button>
+        <button onClick={handleToggle}>
+          <MdMouse
+            className={`text-2xl ${
+              selectedOption === "mobile" ? "text-gray-400" : "text-gray-950"
+            }`}
+          />
+        </button>
+      </div>
 
       {selectedOption === "mobile" ? (
-        <DrawingMobile InitialImage={setInitImage}/>
+        <DrawingMobile InitialImage={setInitImage} TheMask={setMaskImage} />
       ) : (
-        <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage} />
+        <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage} MagicTransform={handleGenerateAI} />
       )}
 
-      {/* <DrawingOnImage InitialImage={setInitImage} TheMask={setMaskImage}/> */}
       {maskImage && (
         <>
           <textarea
@@ -88,7 +79,7 @@ const App = () => {
         </>
       )}
       {prompt.length > 0 && (
-        <button onClick={handleClick}>Generate AI Image</button>
+        <button onClick={handleGenerateAI}>Generate AI Image</button>
       )}
       {generatedImage && (
         <div>

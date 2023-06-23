@@ -7,19 +7,51 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
   const ongoingTouchesRef = useRef([]);
   const [initImage, setInitImage] = useState(null);
 
+  // const handleImageUpload = (event) => {
+  //   InitialImage(event.target.files[0]);
+  //   const file = event.target.files[0];
+  //   const reader = new FileReader();
+
+  //   reader.onload = () => {
+  //     setInitImage(reader.result);
+  //   };
+
+  //   if (file) {
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
   const handleImageUpload = (event) => {
-    InitialImage(event.target.files[0]);
+    
     const file = event.target.files[0];
     const reader = new FileReader();
-
+  
     reader.onload = () => {
-      setInitImage(reader.result);
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 512;
+        canvas.height = 512;
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const resizedImageUrl = canvas.toDataURL('image/jpeg');
+        const blob = dataURLToBlob(resizedImageUrl);
+        const file = new File([blob], 'drawing.jpg', { type: 'image/jpeg' });
+    
+        InitialImage(file);
+  
+        setInitImage(resizedImageUrl);
+        
+      };
+  
+      image.src = reader.result;
     };
-
+  
     if (file) {
       reader.readAsDataURL(file);
     }
   };
+  
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,14 +81,13 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
       evt.preventDefault();
       const touches = evt.changedTouches;
       for (let i = 0; i < touches.length; i++) {
-        const color = document.getElementById('selColor').value;
         const idx = ongoingTouchIndexById(touches[i].identifier);
         if (idx >= 0) {
           context.beginPath();
           context.moveTo(ongoingTouchesRef.current[idx].clientX - offsetXRef.current, ongoingTouchesRef.current[idx].clientY - offsetYRef.current);
           context.lineTo(touches[i].clientX - offsetXRef.current, touches[i].clientY - offsetYRef.current);
           context.lineWidth = 40;
-          context.strokeStyle = '#000000';
+          context.strokeStyle = '#FFFFFF';
           context.lineJoin = "round";
           context.lineCap = 'round';
           context.closePath();
@@ -70,11 +101,10 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
       evt.preventDefault();
       const touches = evt.changedTouches;
       for (let i = 0; i < touches.length; i++) {
-        const color = document.getElementById('selColor').value;
         let idx = ongoingTouchIndexById(touches[i].identifier);
         if (idx >= 0) {
-          context.lineWidth = document.getElementById('selWidth').value;
-          context.fillStyle = color;
+          context.lineWidth = 40;
+          context.fillStyle = '#000000';
           ongoingTouchesRef.current.splice(idx, 1);
         }
       }
@@ -103,11 +133,6 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
       return -1;
     }
 
-    const clearArea = () => {
-      context.setTransform(1, 0, 0, 1, 0, 0);
-      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    }
-
     startup();
 
     return () => {
@@ -119,29 +144,33 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
     }
   }, []);
 
+  const handleSaveImage = () => {
+    const canvas = canvasRef.current;
+    const dataURL = canvas.toDataURL('image/jpeg');
+    const blob = dataURLToBlob(dataURL);
+    const file = new File([blob], 'drawing.jpg', { type: 'image/jpeg' });
+
+    TheMask(file);
+  };
+
+  const dataURLToBlob = (dataURL) => {
+    const arr = dataURL.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  };
+
   return (
     <>
-    <input type="file" accept="image/*" onChange={handleImageUpload} />
-    <div id="canvas_div" style={{ textAlign: 'center', display: 'block', marginLeft: 'auto', marginRight: 'auto', backgroundImage: `url(${initImage})`, backgroundSize: 'cover' }}>
-      <canvas ref={canvasRef} id="canvas" width="512" height="512"></canvas>
-      Line width :
-      <select id="selWidth">
-        <option value="11">11</option>
-        <option value="13" selected="selected">13</option>
-        <option value="15">15</option>
-      </select>
-      Color :
-      <select id="selColor">
-        <option value="black">black</option>
-        <option value="blue" selected="selected">blue</option>
-        <option value="red">red</option>
-        <option value="green">green</option>
-        <option value="yellow">yellow</option>
-        <option value="gray">gray</option>
-      </select>
-    </div>
-    {/* {initImage && (
-        <div
+    <input type="file" accept="image/*" onChange={handleImageUpload} /> 
+    {initImage &&
+    <>
+    <div
           style={{
             width: '512px',
             height: '512px',
@@ -150,15 +179,13 @@ const DrawingMobile = ({ InitialImage, TheMask }) => {
             position: 'relative',
           }}
         >
-          <canvas
-            ref={canvasRef}
-            id="canvas"
-            width="512"
-            height="512"
-            style={{ position: 'absolute', top: 0, left: 0 }}
-          ></canvas>
-        </div>
-      )} */}
+      <canvas ref={canvasRef} id="canvas" width="512" height="512"></canvas>
+    </div>
+    <button onClick={handleSaveImage} className="bg-blue-400 p-2 rounded">
+          Save Mask
+    </button>
+    </>
+}
     </>
   );
 };
